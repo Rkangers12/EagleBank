@@ -6,6 +6,8 @@ import com.studio.eaglebank.domain.models.Address;
 import com.studio.eaglebank.domain.requests.CreateUserRequest;
 import com.studio.eaglebank.domain.responses.UserResponse;
 
+import static com.studio.eaglebank.testdata.UserTestDataHelper.getAddress;
+
 public class UserTestDataHelper {
 
 
@@ -45,6 +47,15 @@ public class UserTestDataHelper {
         return new CreateUserRequest(
                 "Amelia Thompson",
                 address,
+                "+447912345678",
+                "amelia.thompson@example.com"
+        );
+    }
+
+    public static CreateUserRequest getCreateUserRequestBadRequest() {
+        return new CreateUserRequest(
+                null,
+                getAddress(),
                 "+447912345678",
                 "amelia.thompson@example.com"
         );

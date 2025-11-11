@@ -1,5 +1,6 @@
 package com.studio.eaglebank.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studio.eaglebank.config.GlobalExceptionHandler;
 import com.studio.eaglebank.domain.models.Address;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static com.studio.eaglebank.testdata.UserTestDataHelper.getAddress;
 import static com.studio.eaglebank.testdata.UserTestDataHelper.getCreateUserRequest;
+import static com.studio.eaglebank.testdata.UserTestDataHelper.getCreateUserRequestBadRequest;
 import static com.studio.eaglebank.testdata.UserTestDataHelper.getUserResponse;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.when;
@@ -68,11 +70,20 @@ class UserControllerTest {
                 .isEqualTo(objectMapper.writeValueAsString(expected));
     }
 
-    // Sad Path Time
     @Test
-    public void shouldFailToCreateUserBadRequest() {
+    public void shouldFailToCreateUserBadRequest() throws Exception {
 
         // Given
-        Address address = getAddress();
+        CreateUserRequest badRequest = getCreateUserRequestBadRequest();
+
+        // When
+        MockHttpServletResponse response = mvc.perform(post("/v1/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(badRequest)))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 }

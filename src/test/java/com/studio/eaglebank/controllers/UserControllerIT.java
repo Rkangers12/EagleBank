@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import static com.studio.eaglebank.testdata.UserTestDataHelper.getAddress;
 import static com.studio.eaglebank.testdata.UserTestDataHelper.getCreateUserRequest;
+import static com.studio.eaglebank.testdata.UserTestDataHelper.getCreateUserRequestBadRequest;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -64,5 +65,22 @@ public class UserControllerIT {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(savedUser.isPresent());
         assertThat(savedUser.get().getEmail().equals("amelia.thompson@example.com"));
+    }
+
+    @Test
+    public void shouldFailToCreateUserBadRequest() throws Exception {
+
+        // Given
+        CreateUserRequest badRequest = getCreateUserRequestBadRequest();
+
+        // When
+        MockHttpServletResponse response = mvc.perform(post("/v1/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(badRequest)))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 }
