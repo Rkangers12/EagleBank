@@ -2,6 +2,7 @@ package com.studio.eaglebank.services.mappers;
 
 import com.studio.eaglebank.domain.entities.AddressEntity;
 import com.studio.eaglebank.domain.models.Address;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +11,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AddressMapperTest {
 
-    private final AddressMapper unit = new AddressMapper();
+    private AddressMapper unit;
+
+    @BeforeEach
+    public void setUp() {
+        unit = new AddressMapper();
+    }
 
     @Test
     void mapAddressToAddressEntity() {
@@ -40,7 +46,7 @@ class AddressMapperTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-    private Address getAddress() {
+    public static Address getAddress() {
         return new Address(
                 "23 Maple Crescent",
                 "Flat 4B",
@@ -51,7 +57,7 @@ class AddressMapperTest {
         );
     }
 
-    private AddressEntity getAddressEntity() {
+    public static AddressEntity getAddressEntity() {
         return AddressEntity.builder()
                 .line1("23 Maple Crescent")
                 .line2("Flat 4B")
