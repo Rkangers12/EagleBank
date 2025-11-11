@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import static com.studio.eaglebank.testdata.UserTestDataHelper.USER_ID;
 import static com.studio.eaglebank.testdata.UserTestDataHelper.getAddress;
 import static com.studio.eaglebank.testdata.UserTestDataHelper.getAddressEntity;
 import static com.studio.eaglebank.testdata.UserTestDataHelper.getCreateUserRequest;
@@ -75,7 +76,7 @@ public class UserMapperTest {
         UserResponse actual = unit.mapEntityToResponse(entity);
 
         // Then
-        assertThat(actual.id()).isEqualTo("usr-abc123ef");
+        assertThat(actual.id()).isEqualTo(USER_ID);
         assertThat(actual.name()).isEqualTo("Amelia Thompson");
         assertThat(actual.phoneNumber()).isEqualTo("+447912345678");
         assertThat(actual.email()).isEqualTo("amelia.thompson@example.com");

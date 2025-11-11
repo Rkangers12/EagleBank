@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static com.studio.eaglebank.testdata.UserTestDataHelper.USER_ID;
 import static com.studio.eaglebank.testdata.UserTestDataHelper.getAddress;
 import static com.studio.eaglebank.testdata.UserTestDataHelper.getAddressEntity;
 import static com.studio.eaglebank.testdata.UserTestDataHelper.getCreateUserRequest;
@@ -69,21 +70,17 @@ class UserServiceImplTest {
     public void shouldFetchUser() {
 
         // Given
-        Address address = getAddress();
         AddressEntity addressEntity = getAddressEntity();
         UserEntity userEntity = getUserEntity(addressEntity);
 
-        UserResponse expected = getUserResponse(address);
-
-        String userId = "usr-abc123ef";
+        String userId = USER_ID;
         when(userRepositoryMock.findByPublicId(userId)).thenReturn(Optional.of(userEntity));
-        when(userMapperMock.mapEntityToResponse(userEntity)).thenReturn(expected);
 
         // Then
-        UserResponse actual = unit.fetchUser(userId);
+        UserEntity actual = unit.fetchUser(userId);
 
         // When
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).isEqualTo(userEntity);
     }
 
     @Test

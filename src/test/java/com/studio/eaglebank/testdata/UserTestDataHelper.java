@@ -9,6 +9,8 @@ import com.studio.eaglebank.domain.responses.UserResponse;
 public class UserTestDataHelper {
 
 
+    public static final String USER_ID = "usr-abc123ef";
+
     public static Address getAddress() {
         return new Address(
                 "23 Maple Crescent",
@@ -33,7 +35,7 @@ public class UserTestDataHelper {
 
     public static UserEntity getUserEntity(AddressEntity addressEntity) {
         return UserEntity.builder()
-                .publicId("usr-abc123ef")
+                .publicId(USER_ID)
                 .name("Amelia Thompson")
                 .password("encoded password")
                 .address(addressEntity)
@@ -64,7 +66,7 @@ public class UserTestDataHelper {
 
     public static UserResponse getUserResponse(Address address) {
         return new UserResponse(
-                "usr-abc123ef",
+                USER_ID,
                 "Amelia Thompson",
                 address,
                 "+447912345678",

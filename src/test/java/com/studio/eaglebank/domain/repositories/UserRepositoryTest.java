@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.Optional;
 
+import static com.studio.eaglebank.testdata.UserTestDataHelper.USER_ID;
 import static com.studio.eaglebank.testdata.UserTestDataHelper.getAddressEntity;
 import static com.studio.eaglebank.testdata.UserTestDataHelper.getUserEntity;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,13 +39,13 @@ class UserRepositoryTest {
 
         // Then
         assertThat(optionalUser.isPresent());
-        assertThat(optionalUser.get().getPublicId()).isEqualTo("usr-abc123ef");
+        assertThat(optionalUser.get().getPublicId()).isEqualTo(USER_ID);
     }
 
     @Test
     public void findByPublicId() {
 
-        String userPublicId = "usr-abc123ef";
+        String userPublicId = USER_ID;
 
         // When
         Optional<UserEntity> optionalUser = userRepository.findByPublicId(userPublicId);
