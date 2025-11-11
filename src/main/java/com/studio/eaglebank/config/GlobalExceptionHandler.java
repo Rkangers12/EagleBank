@@ -3,6 +3,7 @@ package com.studio.eaglebank.config;
 import com.studio.eaglebank.config.constants.ErrorDetails;
 import com.studio.eaglebank.config.constants.ErrorObject;
 import com.studio.eaglebank.config.exceptions.ForbiddenResourceException;
+import com.studio.eaglebank.config.exceptions.UnauthorisedException;
 import com.studio.eaglebank.config.exceptions.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ForbiddenResourceException.class)
     public ResponseEntity<String> handleForbiddenResourceException(ForbiddenResourceException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(UnauthorisedException.class)
+    public ResponseEntity<String> handleUnauthorisedException(UnauthorisedException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(ex.getMessage());
     }
 
