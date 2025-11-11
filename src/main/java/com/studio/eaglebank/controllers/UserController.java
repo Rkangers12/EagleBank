@@ -5,6 +5,7 @@ import com.studio.eaglebank.domain.responses.UserResponse;
 import com.studio.eaglebank.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserResponse> createANewUser(@Valid @RequestBody CreateUserRequest userRequest) {
 
-        return ResponseEntity.ok(userService.createNewUser(userRequest));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(userService.createNewUser(userRequest));
     }
 }

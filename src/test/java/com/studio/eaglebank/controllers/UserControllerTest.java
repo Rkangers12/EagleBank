@@ -1,0 +1,70 @@
+package com.studio.eaglebank.controllers;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.studio.eaglebank.config.GlobalExceptionHandler;
+import com.studio.eaglebank.domain.models.Address;
+import com.studio.eaglebank.domain.requests.CreateUserRequest;
+import com.studio.eaglebank.domain.responses.UserResponse;
+import com.studio.eaglebank.services.UserService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import static com.studio.eaglebank.services.mappers.AddressMapperTest.getAddress;
+import static com.studio.eaglebank.services.mappers.UserMapperTest.getCreateUserRequest;
+import static com.studio.eaglebank.services.mappers.UserMapperTest.getUserResponse;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
+@ExtendWith(MockitoExtension.class)
+class UserControllerTest {
+
+    public MockMvc mvc;
+
+    private ObjectMapper objectMapper;
+
+    @Mock
+    private UserService userServiceMock;
+
+    @BeforeEach
+    public void setUp() {
+        UserController unit = new UserController(userServiceMock);
+        mvc = MockMvcBuilders.standaloneSetup(unit)
+                .setControllerAdvice(new GlobalExceptionHandler())
+                .build();
+        objectMapper = new ObjectMapper();
+    }
+
+    @Test
+    void createANewUser() throws Exception {
+
+        // Given
+        Address address = getAddress();
+        CreateUserRequest createUserRequest = getCreateUserRequest(address);
+
+        UserResponse expected = getUserResponse(address);
+
+        when(userServiceMock.createNewUser(createUserRequest)).thenReturn(expected);
+
+        // When
+        MockHttpServletResponse response = mvc.perform(post("/v1/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createUserRequest)))
+                .andReturn()
+                .getResponse();
+
+
+        // Then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.getContentAsString())
+                .isEqualTo(objectMapper.writeValueAsString(expected));
+    }
+}
