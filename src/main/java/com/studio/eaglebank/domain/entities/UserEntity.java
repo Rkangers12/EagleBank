@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @Data
 @Builder
@@ -43,12 +42,6 @@ public class UserEntity {
     public void onCreate() {
         this.createdTimestamp = Instant.now();
         this.updatedTimestamp = Instant.now();
-        if (this.publicId == null) {
-            this.publicId = "usr-" + UUID.randomUUID()
-                    .toString()
-                    .replace("-", "")
-                    .substring(0, 8);
-        }
     }
 
     @PreUpdate

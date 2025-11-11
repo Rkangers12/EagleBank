@@ -1,11 +1,13 @@
 package com.studio.eaglebank.services.impl;
 
+import com.studio.eaglebank.domain.entities.UserEntity;
+import com.studio.eaglebank.domain.repositories.UserRepository;
 import com.studio.eaglebank.domain.requests.CreateUserRequest;
 import com.studio.eaglebank.domain.responses.UserResponse;
 import com.studio.eaglebank.services.UserService;
+import com.studio.eaglebank.services.mappers.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +18,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse createNewUser(CreateUserRequest userRequest) {
-        return null;
+
+        UserEntity userEntity = userMapper.mapRequestToEntity(userRequest);
+        UserEntity newUser = userRepository.save(userEntity);
+        return userMapper.mapEntityToResponse(newUser);
     }
 }
