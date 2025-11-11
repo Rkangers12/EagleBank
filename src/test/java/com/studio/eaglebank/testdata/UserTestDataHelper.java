@@ -4,6 +4,7 @@ import com.studio.eaglebank.domain.entities.AddressEntity;
 import com.studio.eaglebank.domain.entities.UserEntity;
 import com.studio.eaglebank.domain.models.Address;
 import com.studio.eaglebank.domain.requests.CreateUserRequest;
+import com.studio.eaglebank.domain.responses.UserAuthResponse;
 import com.studio.eaglebank.domain.responses.UserResponse;
 
 public class UserTestDataHelper {
@@ -72,5 +73,9 @@ public class UserTestDataHelper {
                 "+447912345678",
                 "amelia.thompson@example.com"
         );
+    }
+
+    public static UserAuthResponse getUserAuthResponse() {
+        return new UserAuthResponse(USER_ID, "amelia.thompson@example.com");
     }
 }

@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity fetchUser(String userId) {
+    public Optional<UserEntity> fetchUser(String userId) {
 
         Optional<UserEntity> user = userRepository.findByPublicId(userId);
 
@@ -36,6 +36,6 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException("User does not exist");
         }
 
-        return user.get();
+        return user;
     }
 }
