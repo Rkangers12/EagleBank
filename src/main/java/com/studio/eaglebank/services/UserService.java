@@ -6,4 +6,6 @@ import com.studio.eaglebank.domain.responses.UserResponse;
 public interface UserService {
 
     UserResponse createNewUser(CreateUserRequest userRequest);
+
+    UserResponse fetchUser(String userId);
 }
