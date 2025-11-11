@@ -14,11 +14,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static com.studio.eaglebank.services.mappers.AddressMapperTest.getAddress;
-import static com.studio.eaglebank.services.mappers.AddressMapperTest.getAddressEntity;
-import static com.studio.eaglebank.services.mappers.UserMapperTest.getCreateUserRequest;
-import static com.studio.eaglebank.services.mappers.UserMapperTest.getUserEntity;
-import static com.studio.eaglebank.services.mappers.UserMapperTest.getUserResponse;
+import static com.studio.eaglebank.testdata.UserTestDataHelper.getAddress;
+import static com.studio.eaglebank.testdata.UserTestDataHelper.getAddressEntity;
+import static com.studio.eaglebank.testdata.UserTestDataHelper.getCreateUserRequest;
+import static com.studio.eaglebank.testdata.UserTestDataHelper.getUserEntity;
+import static com.studio.eaglebank.testdata.UserTestDataHelper.getUserResponse;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -59,6 +59,5 @@ class UserServiceImplTest {
 
         // Then
         assertThat(actual).isEqualTo(expected);
-
     }
 }

@@ -17,9 +17,9 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static com.studio.eaglebank.services.mappers.AddressMapperTest.getAddress;
-import static com.studio.eaglebank.services.mappers.UserMapperTest.getCreateUserRequest;
-import static com.studio.eaglebank.services.mappers.UserMapperTest.getUserResponse;
+import static com.studio.eaglebank.testdata.UserTestDataHelper.getAddress;
+import static com.studio.eaglebank.testdata.UserTestDataHelper.getCreateUserRequest;
+import static com.studio.eaglebank.testdata.UserTestDataHelper.getUserResponse;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -69,4 +69,10 @@ class UserControllerTest {
     }
 
     // Sad Path Time
+    @Test
+    public void shouldFailToCreateUserBadRequest() {
+
+        // Given
+        Address address = getAddress();
+    }
 }

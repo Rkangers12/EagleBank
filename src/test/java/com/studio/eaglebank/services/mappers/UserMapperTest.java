@@ -11,8 +11,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static com.studio.eaglebank.services.mappers.AddressMapperTest.getAddress;
-import static com.studio.eaglebank.services.mappers.AddressMapperTest.getAddressEntity;
+import static com.studio.eaglebank.testdata.UserTestDataHelper.getAddress;
+import static com.studio.eaglebank.testdata.UserTestDataHelper.getAddressEntity;
+import static com.studio.eaglebank.testdata.UserTestDataHelper.getCreateUserRequest;
+import static com.studio.eaglebank.testdata.UserTestDataHelper.getUserEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -52,7 +54,6 @@ public class UserMapperTest {
         assertThat(actual.getAddress()).isEqualTo(addressEntity);
     }
 
-
     @Test
     void mapEntityToResponse_shouldMapEntityToUserResponse() {
 
@@ -73,34 +74,5 @@ public class UserMapperTest {
         assertThat(actual.phoneNumber()).isEqualTo("+447912345678");
         assertThat(actual.email()).isEqualTo("amelia.thompson@example.com");
         assertThat(actual.address()).isEqualTo(address);
-    }
-
-    public static UserEntity getUserEntity(AddressEntity addressEntity) {
-        return UserEntity.builder()
-                .publicId("usr-abc123ef")
-                .name("Amelia Thompson")
-                .address(addressEntity)
-                .phoneNumber("+447912345678")
-                .email("amelia.thompson@example.com")
-                .build();
-    }
-
-    public static CreateUserRequest getCreateUserRequest(Address address) {
-        return new CreateUserRequest(
-                "Amelia Thompson",
-                address,
-                "+447912345678",
-                "amelia.thompson@example.com"
-        );
-    }
-
-    public static UserResponse getUserResponse(Address address) {
-        return new UserResponse(
-                "usr-abc123ef",
-                "Amelia Thompson",
-                address,
-                "+447912345678",
-                "amelia.thompson@example.com"
-        );
     }
 }
