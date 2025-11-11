@@ -1,6 +1,5 @@
 package com.studio.eaglebank.controllers;
 
-import com.studio.eaglebank.auth.JwtService;
 import com.studio.eaglebank.domain.requests.CreateUserRequest;
 import com.studio.eaglebank.domain.responses.UserResponse;
 import com.studio.eaglebank.services.UserService;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("v1/users")
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @PostMapping
     public ResponseEntity<UserResponse> createANewUser(@Valid @RequestBody CreateUserRequest userRequest) {
