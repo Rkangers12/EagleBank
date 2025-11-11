@@ -4,6 +4,7 @@ import com.studio.eaglebank.domain.entities.UserEntity;
 import com.studio.eaglebank.domain.requests.CreateUserRequest;
 import com.studio.eaglebank.domain.responses.UserResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -13,11 +14,14 @@ import java.util.UUID;
 public class UserMapper {
 
     private final AddressMapper addressMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public UserEntity mapRequestToEntity(CreateUserRequest request) {
+
         return UserEntity.builder()
                 .publicId(generatePublicId())
                 .name(request.name())
+                .password(passwordEncoder.encode(request.password()))
                 .address(addressMapper.mapAddressToAddressEntity(request.address()))
                 .phoneNumber(request.phoneNumber())
                 .email(request.email())

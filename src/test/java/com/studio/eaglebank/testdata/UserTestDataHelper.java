@@ -35,6 +35,7 @@ public class UserTestDataHelper {
         return UserEntity.builder()
                 .publicId("usr-abc123ef")
                 .name("Amelia Thompson")
+                .password("encoded password")
                 .address(addressEntity)
                 .phoneNumber("+447912345678")
                 .email("amelia.thompson@example.com")
@@ -44,6 +45,7 @@ public class UserTestDataHelper {
     public static CreateUserRequest getCreateUserRequest(Address address) {
         return new CreateUserRequest(
                 "Amelia Thompson",
+                "password",
                 address,
                 "+447912345678",
                 "amelia.thompson@example.com"
@@ -52,6 +54,7 @@ public class UserTestDataHelper {
 
     public static CreateUserRequest getCreateUserRequestBadRequest() {
         return new CreateUserRequest(
+                null,
                 null,
                 getAddress(),
                 "+447912345678",

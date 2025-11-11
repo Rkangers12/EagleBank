@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static com.studio.eaglebank.testdata.UserTestDataHelper.getAddress;
 import static com.studio.eaglebank.testdata.UserTestDataHelper.getAddressEntity;
@@ -24,15 +25,18 @@ public class UserMapperTest {
     @Mock
     private AddressMapper addressMapperMock;
 
+    @Mock
+    private PasswordEncoder passwordEncoderMock;
+
     private UserMapper unit;
 
     @BeforeEach
     public void setUp() {
-        unit = new UserMapper(addressMapperMock);
+        unit = new UserMapper(addressMapperMock, passwordEncoderMock);
     }
 
     @Test
-    void mapRequestToEntity_shouldMapAllFieldsAndGeneratePublicId() {
+    void shouldMapAllFieldsAndGeneratePublicId() {
 
         // Given
         Address address = getAddress();
@@ -41,6 +45,7 @@ public class UserMapperTest {
         CreateUserRequest request = getCreateUserRequest(address);
 
         when(addressMapperMock.mapAddressToAddressEntity(address)).thenReturn(addressEntity);
+        when(passwordEncoderMock.encode("password")).thenReturn("encoded password");
 
         // When
         UserEntity actual = unit.mapRequestToEntity(request);
@@ -49,13 +54,14 @@ public class UserMapperTest {
         assertThat(actual.getPublicId()).isNotNull();
         assertThat(actual.getPublicId()).startsWith("usr-");
         assertThat(actual.getName()).isEqualTo("Amelia Thompson");
+        assertThat(actual.getPassword()).isEqualTo("encoded password");
         assertThat(actual.getPhoneNumber()).isEqualTo("+447912345678");
         assertThat(actual.getEmail()).isEqualTo("amelia.thompson@example.com");
         assertThat(actual.getAddress()).isEqualTo(addressEntity);
     }
 
     @Test
-    void mapEntityToResponse_shouldMapEntityToUserResponse() {
+    void shouldMapEntityToUserResponse() {
 
         // Given
         AddressEntity addressEntity = getAddressEntity();

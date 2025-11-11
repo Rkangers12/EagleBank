@@ -26,6 +26,9 @@ public class UserEntity {
     @Column(nullable = false, length = 100)
     private String name;
 
+    @Column(nullable = false, length = 100)
+    private String password;
+
     @Embedded
     private AddressEntity address;
 
