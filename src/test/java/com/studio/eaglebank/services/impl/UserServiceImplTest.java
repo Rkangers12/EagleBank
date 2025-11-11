@@ -77,10 +77,10 @@ class UserServiceImplTest {
         when(userRepositoryMock.findByPublicId(userId)).thenReturn(Optional.of(userEntity));
 
         // Then
-        UserEntity actual = unit.fetchUser(userId);
+        Optional<UserEntity> actual = unit.fetchUser(userId);
 
         // When
-        assertThat(actual).isEqualTo(userEntity);
+        assertThat(actual.get()).isEqualTo(userEntity);
     }
 
     @Test
