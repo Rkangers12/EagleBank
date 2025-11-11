@@ -11,11 +11,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static com.studio.eaglebank.services.mappers.AddressMapperTest.getAddress;
+import static com.studio.eaglebank.services.mappers.AddressMapperTest.getAddressEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class UserMapperTest {
+public class UserMapperTest {
 
     @Mock
     private AddressMapper addressMapperMock;
@@ -31,8 +33,8 @@ class UserMapperTest {
     void mapRequestToEntity_shouldMapAllFieldsAndGeneratePublicId() {
 
         // Given
-        Address address = AddressMapperTest.getAddress();
-        AddressEntity addressEntity = AddressMapperTest.getAddressEntity();
+        Address address = getAddress();
+        AddressEntity addressEntity = getAddressEntity();
 
         CreateUserRequest request = getCreateUserRequest(address);
 
@@ -55,8 +57,8 @@ class UserMapperTest {
     void mapEntityToResponse_shouldMapEntityToUserResponse() {
 
         // Given
-        AddressEntity addressEntity = AddressMapperTest.getAddressEntity();
-        Address address = AddressMapperTest.getAddress();
+        AddressEntity addressEntity = getAddressEntity();
+        Address address = getAddress();
 
         UserEntity entity = getUserEntity(addressEntity);
 
@@ -85,6 +87,16 @@ class UserMapperTest {
 
     public static CreateUserRequest getCreateUserRequest(Address address) {
         return new CreateUserRequest(
+                "Amelia Thompson",
+                address,
+                "+447912345678",
+                "amelia.thompson@example.com"
+        );
+    }
+
+    public static UserResponse getUserResponse(Address address) {
+        return new UserResponse(
+                "usr-abc123ef",
                 "Amelia Thompson",
                 address,
                 "+447912345678",
