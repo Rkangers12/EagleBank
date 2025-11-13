@@ -1,7 +1,10 @@
 package com.studio.eaglebank.services.impl;
 
 import com.studio.eaglebank.auth.JwtService;
+import com.studio.eaglebank.config.exceptions.ForbiddenResourceException;
 import com.studio.eaglebank.config.exceptions.UnauthorisedException;
+import com.studio.eaglebank.config.exceptions.UserNotFoundException;
+import com.studio.eaglebank.domain.entities.UserEntity;
 import com.studio.eaglebank.domain.requests.UserAuthRequest;
 import com.studio.eaglebank.domain.responses.UserAuthResponse;
 import com.studio.eaglebank.services.AuthService;
@@ -21,10 +24,18 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public UserAuthResponse authenticateUser(UserAuthRequest userAuthRequest) {
 
-        return userService.fetchUser(userAuthRequest.userId())
-                .filter(user -> passwordEncoder.matches(userAuthRequest.password(), user.getPassword()))
-                .map(user -> new UserAuthResponse(user.getPublicId(), user.getEmail(),
-                        jwtService.generateToken(user.getPublicId())))
-                .orElseThrow(() -> new UnauthorisedException("Unable to authorise user incorrect userID or password"));
+        try {
+            UserEntity user = userService.fetchUser(userAuthRequest.userId());
+
+            if (!passwordEncoder.matches(userAuthRequest.password(), user.getPassword())) {
+                throw new ForbiddenResourceException("Unable to authorise user incorrect userID or password");
+            }
+
+            return new UserAuthResponse(user.getPublicId(), user.getEmail(),
+                    jwtService.generateToken(user.getPublicId()));
+
+        } catch (UserNotFoundException | ForbiddenResourceException ex) {
+            throw new UnauthorisedException("Unable to authorise user incorrect userID or password");
+        }
     }
 }

@@ -15,11 +15,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Optional;
-
+import static com.studio.eaglebank.testdata.AuthTestDataHelper.getUserAuthRequestData;
+import static com.studio.eaglebank.testdata.AuthTestDataHelper.getUserAuthResponse;
 import static com.studio.eaglebank.testdata.UserTestDataHelper.USER_ID;
 import static com.studio.eaglebank.testdata.UserTestDataHelper.getAddressEntity;
-import static com.studio.eaglebank.testdata.UserTestDataHelper.getUserAuthResponse;
 import static com.studio.eaglebank.testdata.UserTestDataHelper.getUserEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -50,7 +49,7 @@ class AuthServiceImplTest {
     public void shouldSuccessfullyAuthenticateUser() {
 
         // Given
-        UserAuthRequest userAuthRequest = new UserAuthRequest(USER_ID, "password");
+        UserAuthRequest userAuthRequest = getUserAuthRequestData("password", USER_ID);
 
         AddressEntity addressEntity = getAddressEntity();
         UserEntity userEntity = getUserEntity(addressEntity);
@@ -58,7 +57,7 @@ class AuthServiceImplTest {
         UserAuthResponse expected = getUserAuthResponse();
 
         when(userServiceMock.fetchUser(USER_ID))
-                .thenReturn(Optional.of(userEntity));
+                .thenReturn(userEntity);
         when(passwordEncoderMock.matches(userAuthRequest.password(), userEntity.getPassword()))
                 .thenReturn(true);
         when(jwtServiceMock.generateToken(userEntity.getPublicId())).thenReturn("jwtToken-random-token");
@@ -74,7 +73,7 @@ class AuthServiceImplTest {
     public void shouldFailToAuthenticateUserUnableToFindUser() {
 
         // Given
-        UserAuthRequest userAuthRequest = new UserAuthRequest(USER_ID, "password");
+        UserAuthRequest userAuthRequest = getUserAuthRequestData("password", USER_ID);
         
         when(userServiceMock.fetchUser(USER_ID))
                 .thenThrow(new UnauthorisedException(UNAUTHORISED_USER_ERROR_MESSAGE));
@@ -91,14 +90,14 @@ class AuthServiceImplTest {
     public void shouldFailToAuthenticateUserIncorrectPassword() {
 
         // Given
-        UserAuthRequest userAuthRequest = new UserAuthRequest(USER_ID, "password");
+        UserAuthRequest userAuthRequest = getUserAuthRequestData("password", USER_ID);
 
         AddressEntity addressEntity = getAddressEntity();
         UserEntity userEntity = getUserEntity(addressEntity);
 
 
         when(userServiceMock.fetchUser(USER_ID))
-                .thenReturn(Optional.of(userEntity));
+                .thenReturn(userEntity);
         when(passwordEncoderMock.matches(userAuthRequest.password(), userEntity.getPassword()))
                 .thenReturn(false);
 
