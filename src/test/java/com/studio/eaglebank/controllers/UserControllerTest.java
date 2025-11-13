@@ -1,6 +1,5 @@
 package com.studio.eaglebank.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studio.eaglebank.config.GlobalExceptionHandler;
 import com.studio.eaglebank.domain.models.Address;
@@ -46,7 +45,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void createANewUser() throws Exception {
+    public void shouldCreateANewUser() throws Exception {
 
         // Given
         Address address = getAddress();
