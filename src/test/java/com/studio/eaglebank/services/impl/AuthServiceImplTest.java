@@ -1,5 +1,6 @@
 package com.studio.eaglebank.services.impl;
 
+import com.studio.eaglebank.auth.JwtService;
 import com.studio.eaglebank.config.exceptions.UnauthorisedException;
 import com.studio.eaglebank.domain.entities.AddressEntity;
 import com.studio.eaglebank.domain.entities.UserEntity;
@@ -30,6 +31,9 @@ class AuthServiceImplTest {
     public static final String UNAUTHORISED_USER_ERROR_MESSAGE = "Unable to authorise user incorrect userID or password";
 
     @Mock
+    private JwtService jwtServiceMock;
+
+    @Mock
     private UserService userServiceMock;
 
     @Mock
@@ -39,7 +43,7 @@ class AuthServiceImplTest {
 
     @BeforeEach
     public void setUp() {
-        unit = new AuthServiceImpl(userServiceMock, passwordEncoderMock);
+        unit = new AuthServiceImpl(jwtServiceMock, userServiceMock, passwordEncoderMock);
     }
 
     @Test
@@ -57,6 +61,7 @@ class AuthServiceImplTest {
                 .thenReturn(Optional.of(userEntity));
         when(passwordEncoderMock.matches(userAuthRequest.password(), userEntity.getPassword()))
                 .thenReturn(true);
+        when(jwtServiceMock.generateToken(userEntity.getPublicId())).thenReturn("jwtToken-random-token");
 
         // When
         UserAuthResponse actual = unit.authenticateUser(userAuthRequest);

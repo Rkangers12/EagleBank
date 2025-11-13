@@ -76,6 +76,6 @@ public class UserTestDataHelper {
     }
 
     public static UserAuthResponse getUserAuthResponse() {
-        return new UserAuthResponse(USER_ID, "amelia.thompson@example.com");
+        return new UserAuthResponse(USER_ID, "amelia.thompson@example.com", "jwtToken-random-token");
     }
 }

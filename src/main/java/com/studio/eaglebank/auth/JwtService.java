@@ -14,6 +14,7 @@ import java.util.Date;
 
 @Service
 public class JwtService {
+
     private static final String SECRET = "barclays_take_home_secret_key_94729";
     private static final long EXPIRATION_MS = 60 * 60 * 1000; // 1h
 
@@ -21,7 +22,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(long userId) {
+    public String generateToken(String userId) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + EXPIRATION_MS);
 

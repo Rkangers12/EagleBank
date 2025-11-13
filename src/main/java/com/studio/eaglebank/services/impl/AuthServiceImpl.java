@@ -1,8 +1,7 @@
 package com.studio.eaglebank.services.impl;
 
+import com.studio.eaglebank.auth.JwtService;
 import com.studio.eaglebank.config.exceptions.UnauthorisedException;
-import com.studio.eaglebank.config.exceptions.UserNotFoundException;
-import com.studio.eaglebank.domain.entities.UserEntity;
 import com.studio.eaglebank.domain.requests.UserAuthRequest;
 import com.studio.eaglebank.domain.responses.UserAuthResponse;
 import com.studio.eaglebank.services.AuthService;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
+    private final JwtService jwtService;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
@@ -23,7 +23,8 @@ public class AuthServiceImpl implements AuthService {
 
         return userService.fetchUser(userAuthRequest.userId())
                 .filter(user -> passwordEncoder.matches(userAuthRequest.password(), user.getPassword()))
-                .map(user ->  new UserAuthResponse(user.getPublicId(), user.getEmail()))
+                .map(user -> new UserAuthResponse(user.getPublicId(), user.getEmail(),
+                        jwtService.generateToken(user.getPublicId())))
                 .orElseThrow(() -> new UnauthorisedException("Unable to authorise user incorrect userID or password"));
     }
 }
