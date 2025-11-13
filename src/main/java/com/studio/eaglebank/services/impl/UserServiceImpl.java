@@ -10,8 +10,6 @@ import com.studio.eaglebank.services.mappers.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -28,14 +26,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserEntity> fetchUser(String userId) {
+    public UserEntity fetchUser(String userId) {
 
-        Optional<UserEntity> user = userRepository.findByPublicId(userId);
-
-        if (user.isEmpty()) {
-            throw new UserNotFoundException("User does not exist");
-        }
-
-        return user;
+        return userRepository.findByPublicId(userId)
+                .orElseThrow(() -> new UserNotFoundException("User does not exist"));
     }
 }
