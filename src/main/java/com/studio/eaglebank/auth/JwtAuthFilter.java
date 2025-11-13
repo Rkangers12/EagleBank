@@ -1,5 +1,6 @@
 package com.studio.eaglebank.auth;
 
+import com.studio.eaglebank.config.constants.WhitelistedEndpoint;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,12 +10,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+
+    private static final Set<WhitelistedEndpoint> WHITELISTED_ENDPOINTS = Set.of(
+            new WhitelistedEndpoint("/v1/users", "POST"),
+            new WhitelistedEndpoint("/v1/auth", "POST"));
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -24,7 +30,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         String method = request.getMethod();
 
-        if (path.equals("/v1/users") && method.equalsIgnoreCase("POST")) {
+        if (WHITELISTED_ENDPOINTS.contains(new WhitelistedEndpoint(path, method))) {
             filterChain.doFilter(request, response);
             return;
         }
