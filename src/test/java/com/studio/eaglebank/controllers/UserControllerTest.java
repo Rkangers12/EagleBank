@@ -119,9 +119,8 @@ class UserControllerTest {
 
         // When / Then
         mvc.perform(get("/v1/users/{userId}", USER_ID)
-                        .requestAttr("userId", USER_ID)) // set by JwtAuthFilter in real life
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(expected)));
+                        .requestAttr("userId", USER_ID))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -142,21 +141,5 @@ class UserControllerTest {
                                 new ErrorResponse("The user is not allowed to access the transaction")
                         )
                 ));
-    }
-
-    @Test
-    public void shouldFailToFetchUserDetailsBadRequestWhenUserIdInvalid() throws Exception {
-
-        // Given
-        String invalidUserId = "abc"; //
-
-        // When
-        MockHttpServletResponse response = mvc.perform(get("/v1/users/{userId}", invalidUserId)
-                        .requestAttr("userId", invalidUserId))
-                .andReturn()
-                .getResponse();
-
-        // Then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 }

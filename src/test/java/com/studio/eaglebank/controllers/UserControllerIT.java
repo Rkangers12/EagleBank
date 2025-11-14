@@ -139,4 +139,13 @@ public class UserControllerIT {
                                 new ErrorResponse("User does not exist"))
                 ));
     }
+
+    @Test
+    public void shouldReturnNotFoundWhenUserIdIsInvalid() throws Exception {
+
+        // When - Then
+        mvc.perform(get("/v1/users/{userId}", "some_id")
+                        .requestAttr("userId", USER_ID))
+                .andExpect(status().isBadRequest());
+    }
 }
