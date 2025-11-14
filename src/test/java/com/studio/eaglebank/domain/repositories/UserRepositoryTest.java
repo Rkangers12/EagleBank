@@ -45,13 +45,22 @@ class UserRepositoryTest {
     @Test
     public void findByPublicId() {
 
-        String userPublicId = USER_ID;
-
         // When
-        Optional<UserEntity> optionalUser = userRepository.findByPublicId(userPublicId);
+        Optional<UserEntity> optionalUser = userRepository.findByPublicId(USER_ID);
 
         // Then
         assertThat(optionalUser.isPresent());
-        assertThat(optionalUser.get().getPublicId()).isEqualTo(userPublicId);
+        assertThat(optionalUser.get().getPublicId()).isEqualTo(USER_ID);
+    }
+
+    @Test
+    public void findByEmail() {
+
+        // When
+        Optional<UserEntity> optionalUser = userRepository.findByEmail("amelia.thompson@example.com");
+
+        // Then
+        assertThat(optionalUser.isPresent());
+        assertThat(optionalUser.get().getPublicId()).isEqualTo(USER_ID);
     }
 }

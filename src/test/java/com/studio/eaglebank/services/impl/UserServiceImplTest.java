@@ -1,5 +1,6 @@
 package com.studio.eaglebank.services.impl;
 
+import com.studio.eaglebank.config.exceptions.DuplicateResourceException;
 import com.studio.eaglebank.config.exceptions.UserNotFoundException;
 import com.studio.eaglebank.domain.entities.AddressEntity;
 import com.studio.eaglebank.domain.entities.UserEntity;
@@ -44,7 +45,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    public void createNewUser() {
+    public void shouldCreateNewUser() {
 
         // Given
         Address address = getAddress();
@@ -64,6 +65,21 @@ class UserServiceImplTest {
 
         // Then
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void shouldNotCreateNewUserAlreadyTaken() {
+
+        // Given
+        CreateUserRequest userRequest = getCreateUserRequest(getAddress());
+        UserEntity existingUser = getUserEntity(getAddressEntity());
+
+        when(userRepositoryMock.findByEmail(existingUser.getEmail())).thenReturn(Optional.of(existingUser));
+
+        // When - Then
+        DuplicateResourceException ex = assertThrows(DuplicateResourceException.class,
+                () -> unit.createNewUser(userRequest));
+        assertThat(ex.getMessage()).isEqualTo("This email is already taken");
     }
 
     @Test

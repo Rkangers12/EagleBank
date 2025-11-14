@@ -2,6 +2,7 @@ package com.studio.eaglebank.config;
 
 import com.studio.eaglebank.config.constants.ErrorDetails;
 import com.studio.eaglebank.config.constants.ErrorObject;
+import com.studio.eaglebank.config.exceptions.DuplicateResourceException;
 import com.studio.eaglebank.config.exceptions.ForbiddenResourceException;
 import com.studio.eaglebank.config.exceptions.UnauthorisedException;
 import com.studio.eaglebank.config.exceptions.UserNotFoundException;
@@ -15,6 +16,12 @@ import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<String> handleDuplicateResourceException(DuplicateResourceException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ex.getMessage());
+    }
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {

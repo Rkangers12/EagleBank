@@ -2,6 +2,7 @@ package com.studio.eaglebank.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studio.eaglebank.config.GlobalExceptionHandler;
+import com.studio.eaglebank.config.exceptions.DuplicateResourceException;
 import com.studio.eaglebank.domain.models.Address;
 import com.studio.eaglebank.domain.requests.CreateUserRequest;
 import com.studio.eaglebank.domain.responses.UserResponse;
@@ -24,6 +25,8 @@ import static com.studio.eaglebank.testdata.UserTestDataHelper.getUserResponse;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
@@ -67,6 +70,23 @@ class UserControllerTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.getContentAsString())
                 .isEqualTo(objectMapper.writeValueAsString(expected));
+    }
+
+    @Test
+    public void shouldNotCreateNewUserEmailClash() throws Exception {
+
+        // Given
+        CreateUserRequest userRequest = getCreateUserRequest(getAddress());
+
+        when(userServiceMock.createNewUser(userRequest))
+                .thenThrow(new DuplicateResourceException("This email is already taken"));
+
+        // When
+        mvc.perform(post("v1/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(userRequest)))
+                .andExpect(status().isConflict())
+                .andExpect(content().string("This email is already taken"));
     }
 
     @Test
