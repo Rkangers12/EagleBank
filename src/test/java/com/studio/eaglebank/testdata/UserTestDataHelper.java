@@ -72,6 +72,16 @@ public class UserTestDataHelper {
         );
     }
 
+    public static CreateUserRequest getCreateUserRequestIT(String email) {
+        return new CreateUserRequest(
+                "generic name",
+                "password",
+                new Address("line 1", "line 2", "line 3", "town", "county", "LE15 6GY"),
+                "+447912345678",
+                email
+        );
+    }
+
     public static CreateUserRequest getCreateUserRequestBadRequest() {
         return new CreateUserRequest(
                 null,

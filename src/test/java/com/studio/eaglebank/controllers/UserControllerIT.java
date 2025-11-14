@@ -2,7 +2,6 @@ package com.studio.eaglebank.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studio.eaglebank.config.GlobalExceptionHandler;
-import com.studio.eaglebank.config.exceptions.DuplicateResourceException;
 import com.studio.eaglebank.domain.entities.UserEntity;
 import com.studio.eaglebank.domain.models.Address;
 import com.studio.eaglebank.domain.repositories.UserRepository;
@@ -23,9 +22,9 @@ import java.util.Optional;
 import static com.studio.eaglebank.controllers.AuthControllerIT.ENCODED_PASSWORD;
 import static com.studio.eaglebank.testdata.UserTestDataHelper.getAddress;
 import static com.studio.eaglebank.testdata.UserTestDataHelper.getCreateUserRequest;
+import static com.studio.eaglebank.testdata.UserTestDataHelper.getCreateUserRequestIT;
 import static com.studio.eaglebank.testdata.UserTestDataHelper.getUserEntityIT;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -77,16 +76,17 @@ public class UserControllerIT {
     public void shouldNotCreateNewUserEmailClash() throws Exception {
 
         // Given
-        String userId = "usr-generic1";
-        userRepository.save(getUserEntityIT(userId, ENCODED_PASSWORD, "amelia.thompson@example.com"));
-        CreateUserRequest userRequest = getCreateUserRequest(getAddress());
+        String userId = "usr-generic2";
+        userRepository.save(getUserEntityIT(userId, ENCODED_PASSWORD, "user.clash@email.com"));
+        CreateUserRequest userRequest = getCreateUserRequestIT("user.clash@email.com");
 
 
         // When
-        mvc.perform(post("v1/users")
+        mvc.perform(post("/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userRequest)))
                 .andExpect(status().isConflict())
-                .andExpect(content().string("This email is already taken"));
+                .andExpect(content().string("This email is already taken"))
+                .andReturn().getResponse();
     }
 }

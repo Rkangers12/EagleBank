@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.Optional;
 
@@ -74,7 +75,9 @@ class UserServiceImplTest {
         CreateUserRequest userRequest = getCreateUserRequest(getAddress());
         UserEntity existingUser = getUserEntity(getAddressEntity());
 
-        when(userRepositoryMock.findByEmail(existingUser.getEmail())).thenReturn(Optional.of(existingUser));
+        when(userMapperMock.mapRequestToEntity(userRequest)).thenReturn(existingUser);
+        when(userRepositoryMock.save(existingUser))
+                .thenThrow(new DataIntegrityViolationException("violated key constraint"));
 
         // When - Then
         DuplicateResourceException ex = assertThrows(DuplicateResourceException.class,

@@ -82,7 +82,7 @@ class UserControllerTest {
                 .thenThrow(new DuplicateResourceException("This email is already taken"));
 
         // When
-        mvc.perform(post("v1/users")
+        mvc.perform(post("/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userRequest)))
                 .andExpect(status().isConflict())
