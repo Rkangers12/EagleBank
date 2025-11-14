@@ -44,6 +44,24 @@ public class UserTestDataHelper {
                 .build();
     }
 
+    public static UserEntity getUserEntityIT(String userId, String encodedPassword, String email) {
+        return UserEntity.builder()
+                .publicId(userId)
+                .name("generic name")
+                .password(encodedPassword)
+                .address(AddressEntity.builder()
+                        .line1("line 1")
+                        .line2("line 2")
+                        .line3("line 3")
+                        .town("town")
+                        .county("county")
+                        .postcode("P05T C0DE")
+                        .build())
+                .phoneNumber("+447912345678")
+                .email(email)
+                .build();
+    }
+
     public static CreateUserRequest getCreateUserRequest(Address address) {
         return new CreateUserRequest(
                 "Amelia Thompson",
