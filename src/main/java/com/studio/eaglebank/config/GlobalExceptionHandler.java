@@ -7,6 +7,7 @@ import com.studio.eaglebank.config.exceptions.DuplicateResourceException;
 import com.studio.eaglebank.config.exceptions.ForbiddenResourceException;
 import com.studio.eaglebank.config.exceptions.UnauthorisedException;
 import com.studio.eaglebank.config.exceptions.UserNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -52,6 +53,16 @@ public class GlobalExceptionHandler {
                 ));
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorObject> handleConstaintValidationError(ConstraintViolationException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorObject(
+                        "The request didn't supply all the necessary data", getFieldErrors(ex)
+                ));
+    }
+
     private static List<ErrorDetails> getFieldErrors(MethodArgumentNotValidException ex) {
         return ex.getBindingResult()
                 .getFieldErrors()
@@ -60,6 +71,17 @@ public class GlobalExceptionHandler {
                         error.getField(),
                         error.getDefaultMessage(),
                         error.getCode()
+                ))
+                .toList();
+    }
+
+    private static List<ErrorDetails> getFieldErrors(ConstraintViolationException ex) {
+        return ex.getConstraintViolations()
+                .stream()
+                .map(error -> new ErrorDetails(
+                        error.getPropertyPath().toString(),
+                        error.getMessage(),
+                        error.getInvalidValue().toString()
                 ))
                 .toList();
     }

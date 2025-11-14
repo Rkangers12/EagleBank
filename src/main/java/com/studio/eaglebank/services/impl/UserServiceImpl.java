@@ -1,6 +1,7 @@
 package com.studio.eaglebank.services.impl;
 
 import com.studio.eaglebank.config.exceptions.DuplicateResourceException;
+import com.studio.eaglebank.config.exceptions.ForbiddenResourceException;
 import com.studio.eaglebank.config.exceptions.UserNotFoundException;
 import com.studio.eaglebank.domain.entities.UserEntity;
 import com.studio.eaglebank.domain.repositories.UserRepository;
@@ -38,5 +39,16 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.findByPublicId(userId)
                 .orElseThrow(() -> new UserNotFoundException("User does not exist"));
+    }
+
+    @Override
+    public UserResponse fetchUserDetails(String authUser, String userId) {
+        UserEntity fetchedUser = fetchUser(userId);
+
+        if (!authUser.equals(userId)) {
+            throw new ForbiddenResourceException("The user is not allowed to access the transaction");
+        }
+
+        return userMapper.mapEntityToResponse(fetchedUser);
     }
 }

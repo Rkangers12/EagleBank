@@ -9,4 +9,6 @@ public interface UserService {
     UserResponse createNewUser(CreateUserRequest userRequest);
 
     UserEntity fetchUser(String userId);
+
+    UserResponse fetchUserDetails(String authUser, String userId);
 }
