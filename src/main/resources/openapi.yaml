@@ -4,7 +4,11 @@ info:
   version: v1.0.0
   description: |-
     We want you to create a REST API for Eagle Bank which conforms to this OpenAPI specification which allows a user to create, fetch, update and delete a bank account and deposit or withdraw money from the account. These will be stored as transactions against a bank account which be retrieved but not modified or deleted.
+servers:
+  - url: http://localhost:5500
 tags:
+  - name: auth
+    description: Authenticate and retrieve a Auth token
   - name: account
     description: Manage a bank account
   - name: transaction
@@ -12,6 +16,44 @@ tags:
   - name: user
     description: Manage a user
 paths:
+  /v1/auth:
+    post:
+      tags:
+        - auth
+      description: Generate an authentication token for a user
+      operationId: generateToken
+      requestBody:
+        description: User information to obtain a new token
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAuthRequest'
+        required: true
+      responses:
+        '200':
+          description: User has authenticated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAuthResponse'
+        '400':
+          description: Invalid details supplied
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        '401':
+          description: User supplied invalid details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '500':
+          description: An unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /v1/accounts:
     post:
       tags:
@@ -19,7 +61,7 @@ paths:
       description: Create a new bank account
       operationId: createAccount
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       requestBody:
         description: Create a new bank account for the user
         content:
@@ -64,7 +106,7 @@ paths:
       description: List accounts
       operationId: listAccounts
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       responses:
         '200':
           description: The list of bank accounts
@@ -99,7 +141,7 @@ paths:
             type: string
             pattern: ^01\d{6}$
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       responses:
         '200':
           description: The bank account details
@@ -151,7 +193,7 @@ paths:
             type: string
             pattern: ^01\d{6}$
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       requestBody:
         description: Update bank account details for the user
         content:
@@ -210,7 +252,7 @@ paths:
             type: string
             pattern: ^01\d{6}$
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       responses:
         '204':
           description: The bank account has been deleted
@@ -266,7 +308,7 @@ paths:
               $ref: '#/components/schemas/CreateTransactionRequest'
         required: true
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       responses:
         '201':
           description: Transaction has been created successfully
@@ -324,7 +366,7 @@ paths:
             type: string
             pattern: ^01\d{6}$
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       responses:
         '200':
           description: The list of transaction details
@@ -384,7 +426,7 @@ paths:
             type: string
             pattern: ^tan-[A-Za-z0-9]$
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       responses:
         '200':
           description: The transaction details
@@ -444,6 +486,8 @@ paths:
                 $ref: '#/components/schemas/UserResponse'
         '400':
           description: Invalid details supplied
+        '409':
+          description: This email is already taken
         '500':
           description: An unexpected error occurred
           content:
@@ -465,7 +509,7 @@ paths:
             type: string
             pattern: ^usr-[A-Za-z0-9]+$
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       responses:
         '200':
           description: The user details
@@ -517,7 +561,7 @@ paths:
             type: string
             pattern: ^usr-[A-Za-z0-9]+$
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       requestBody:
         description: Update user details
         content:
@@ -576,7 +620,7 @@ paths:
             type: string
             pattern: ^usr-[A-Za-z0-9]+$
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       responses:
         '204':
           description: The user has been deleted
@@ -631,7 +675,7 @@ components:
             - "My Account"
         accountType:
           type: string
-          enum: 
+          enum:
             - "personal"
     UpdateBankAccountRequest:
       type: object
@@ -643,7 +687,7 @@ components:
             - "My Account"
         accountType:
           type: string
-          enum: 
+          enum:
             - "personal"
     ListBankAccountsResponse:
       type: object
@@ -653,7 +697,7 @@ components:
         accounts:
           type: array
           items:
-             $ref: "#/components/schemas/BankAccountResponse"
+            $ref: "#/components/schemas/BankAccountResponse"
     BankAccountResponse:
       type: object
       required:
@@ -674,13 +718,13 @@ components:
             - "01765432"
         sortCode:
           type: string
-          enum: 
+          enum:
             - "10-10-10"
         name:
           type: string
         accountType:
           type: string
-          enum: 
+          enum:
             - "personal"
         balance:
           type: number
@@ -723,7 +767,7 @@ components:
             - "GBP"
         type:
           type: string
-          enum: 
+          enum:
             - "deposit"
             - "withdrawal"
         reference:
@@ -736,7 +780,7 @@ components:
         transactions:
           type: array
           items:
-             $ref: "#/components/schemas/TransactionResponse"
+            $ref: "#/components/schemas/TransactionResponse"
     TransactionResponse:
       type: object
       required:
@@ -746,7 +790,7 @@ components:
         - type
         - createdTimestamp
       properties:
-        id: 
+        id:
           type: string
           pattern: ^tan-[A-Za-z0-9]$
           examples:
@@ -762,7 +806,7 @@ components:
             - "GBP"
         type:
           type: string
-          enum: 
+          enum:
             - "deposit"
             - "withdrawal"
         reference:
@@ -770,7 +814,7 @@ components:
         userId:
           type: string
           format: ^usr-[A-Za-z0-9]+$
-          examples: 
+          examples:
             - usr-abc123
         createdTimestamp:
           type: string
@@ -779,6 +823,7 @@ components:
       type: object
       required:
         - name
+        - password
         - address
         - phoneNumber
         - email
@@ -787,6 +832,10 @@ components:
           type: string
           examples:
             - "Test User"
+        password:
+          type: string
+          examples:
+            - "Password"
         address:
           type: object
           required:
@@ -812,7 +861,7 @@ components:
           format: ^\+[1-9]\d{1,14}$
         email:
           type: string
-          format: email    
+          format: email
     UpdateUserRequest:
       type: object
       properties:
@@ -926,6 +975,49 @@ components:
                 type: string
               type:
                 type: string
+    UserAuthRequest:
+      type: object
+      required:
+        - userId
+        - password
+      properties:
+        userId:
+          type: string
+          minLength: 2
+          maxLength: 50
+          description: "Unique user identifier"
+          examples:
+            - "usr-12345"
+        password:
+          type: string
+          minLength: 8
+          maxLength: 100
+          description: "User password"
+          examples:
+            - "MySecurePassword123"
+    UserAuthResponse:
+      type: object
+      required:
+        - userId
+        - email
+        - token
+      properties:
+        userId:
+          type: string
+          description: "User ID returned after successful authentication"
+          examples:
+            - "usr-12345"
+        email:
+          type: string
+          format: email
+          description: "User email address"
+          examples:
+            - "user@example.com"
+        token:
+          type: string
+          description: "JWT token for authenticated user"
+          examples:
+            - "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
   securitySchemes:
     bearerAuth:
       type: http

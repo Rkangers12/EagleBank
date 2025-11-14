@@ -2,6 +2,7 @@ package com.studio.eaglebank.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studio.eaglebank.config.GlobalExceptionHandler;
+import com.studio.eaglebank.config.constants.ErrorResponse;
 import com.studio.eaglebank.config.exceptions.DuplicateResourceException;
 import com.studio.eaglebank.domain.models.Address;
 import com.studio.eaglebank.domain.requests.CreateUserRequest;
@@ -84,7 +85,7 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userRequest)))
                 .andExpect(status().isConflict())
-                .andExpect(content().string("This email is already taken"));
+                .andExpect(content().string(objectMapper.writeValueAsString(new ErrorResponse("This email is already taken"))));
     }
 
     @Test

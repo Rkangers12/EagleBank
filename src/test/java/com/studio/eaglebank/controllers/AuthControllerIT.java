@@ -3,6 +3,7 @@ package com.studio.eaglebank.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studio.eaglebank.config.GlobalExceptionHandler;
 import com.studio.eaglebank.config.constants.ErrorObject;
+import com.studio.eaglebank.config.constants.ErrorResponse;
 import com.studio.eaglebank.domain.repositories.UserRepository;
 import com.studio.eaglebank.domain.requests.UserAuthRequest;
 import com.studio.eaglebank.domain.responses.UserAuthResponse;
@@ -87,7 +88,7 @@ public class AuthControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(authRequest)))
                 .andExpect(status().isUnauthorized())
-                .andExpect(content().string(UNABLE_TO_AUTHORISE_MSG));
+                .andExpect(content().string(objectMapper.writeValueAsString(new ErrorResponse(UNABLE_TO_AUTHORISE_MSG))));
     }
 
     @Test
@@ -101,7 +102,7 @@ public class AuthControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(authRequest)))
                 .andExpect(status().isUnauthorized())
-                .andExpect(content().string(UNABLE_TO_AUTHORISE_MSG));
+                .andExpect(content().string(objectMapper.writeValueAsString(new ErrorResponse(UNABLE_TO_AUTHORISE_MSG))));
     }
 
     @Test

@@ -2,6 +2,7 @@ package com.studio.eaglebank.config;
 
 import com.studio.eaglebank.config.constants.ErrorDetails;
 import com.studio.eaglebank.config.constants.ErrorObject;
+import com.studio.eaglebank.config.constants.ErrorResponse;
 import com.studio.eaglebank.config.exceptions.DuplicateResourceException;
 import com.studio.eaglebank.config.exceptions.ForbiddenResourceException;
 import com.studio.eaglebank.config.exceptions.UnauthorisedException;
@@ -18,27 +19,27 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateResourceException.class)
-    public ResponseEntity<String> handleDuplicateResourceException(DuplicateResourceException ex) {
+    public ResponseEntity<ErrorResponse> handleDuplicateResourceException(DuplicateResourceException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(ex.getMessage());
+                .body(new ErrorResponse(ex.getMessage()));
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(ex.getMessage());
+                .body(new ErrorResponse(ex.getMessage()));
     }
 
     @ExceptionHandler(ForbiddenResourceException.class)
-    public ResponseEntity<String> handleForbiddenResourceException(ForbiddenResourceException ex) {
+    public ResponseEntity<ErrorResponse> handleForbiddenResourceException(ForbiddenResourceException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(ex.getMessage());
+                .body(new ErrorResponse(ex.getMessage()));
     }
 
     @ExceptionHandler(UnauthorisedException.class)
-    public ResponseEntity<String> handleUnauthorisedException(UnauthorisedException ex) {
+    public ResponseEntity<ErrorResponse> handleUnauthorisedException(UnauthorisedException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(ex.getMessage());
+                .body(new ErrorResponse(ex.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
