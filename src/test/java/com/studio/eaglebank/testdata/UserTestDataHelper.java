@@ -12,6 +12,7 @@ public class UserTestDataHelper {
 
 
     public static final String USER_ID = "usr-abc123ef";
+    public static final String USER_I2 = "usr-abc123ef22";
 
     public static Address getAddress() {
         return new Address(

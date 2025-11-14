@@ -1,6 +1,7 @@
 package com.studio.eaglebank.services.impl;
 
 import com.studio.eaglebank.config.exceptions.DuplicateResourceException;
+import com.studio.eaglebank.config.exceptions.ForbiddenResourceException;
 import com.studio.eaglebank.config.exceptions.UserNotFoundException;
 import com.studio.eaglebank.domain.entities.AddressEntity;
 import com.studio.eaglebank.domain.entities.UserEntity;
@@ -111,6 +112,58 @@ class UserServiceImplTest {
 
         // Then
         UserNotFoundException ex = assertThrows(UserNotFoundException.class, () -> unit.fetchUser(userId));
+        assertThat(ex.getMessage()).isEqualTo("User does not exist");
+    }
+
+    @Test
+    public void shouldFetchUserDetailsWhenAuthorised() {
+
+        // Given
+        AddressEntity addressEntity = getAddressEntity();
+        UserEntity userEntity = getUserEntity(addressEntity);
+        UserResponse expected = getUserResponse(getAddress());
+
+        when(userRepositoryMock.findByPublicId(USER_ID)).thenReturn(Optional.of(userEntity));
+        when(userMapperMock.mapEntityToResponse(userEntity)).thenReturn(expected);
+
+        // When
+        UserResponse actual = unit.fetchUserDetails(USER_ID, USER_ID);
+
+        // Then
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void shouldThrowForbiddenWhenAuthUserDiffersFromRequestedUser() {
+
+        // Given
+        AddressEntity addressEntity = getAddressEntity();
+        UserEntity userEntity = getUserEntity(addressEntity);
+
+        when(userRepositoryMock.findByPublicId(USER_ID)).thenReturn(Optional.of(userEntity));
+
+        // When - Then
+        ForbiddenResourceException ex = assertThrows(
+                ForbiddenResourceException.class,
+                () -> unit.fetchUserDetails("usr-different-user", USER_ID)
+        );
+
+        assertThat(ex.getMessage())
+                .isEqualTo("The user is not allowed to access the transaction");
+    }
+
+    @Test
+    public void shouldThrowUserNotFoundWhenFetchingDetailsForNonExistingUser() {
+
+        // Given
+        when(userRepositoryMock.findByPublicId(USER_ID)).thenReturn(Optional.empty());
+
+        // When - Then
+        UserNotFoundException ex = assertThrows(
+                UserNotFoundException.class,
+                () -> unit.fetchUserDetails(USER_ID, USER_ID)
+        );
+
         assertThat(ex.getMessage()).isEqualTo("User does not exist");
     }
 }
