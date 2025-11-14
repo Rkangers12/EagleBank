@@ -42,7 +42,9 @@ public class UserMapper {
                 entity.getName(),
                 addressMapper.mapAddressEntityToAddress(entity.getAddress()),
                 entity.getPhoneNumber(),
-                entity.getEmail()
+                entity.getEmail(),
+                entity.getCreatedTimestamp(),
+                entity.getUpdatedTimestamp()
         );
     }
 }

@@ -12,6 +12,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.Instant;
+
 import static com.studio.eaglebank.testdata.UserTestDataHelper.USER_ID;
 import static com.studio.eaglebank.testdata.UserTestDataHelper.getAddress;
 import static com.studio.eaglebank.testdata.UserTestDataHelper.getAddressEntity;
@@ -80,6 +82,8 @@ public class UserMapperTest {
         assertThat(actual.name()).isEqualTo("Amelia Thompson");
         assertThat(actual.phoneNumber()).isEqualTo("+447912345678");
         assertThat(actual.email()).isEqualTo("amelia.thompson@example.com");
+        assertThat(actual.createdTimestamp()).isEqualTo(Instant.parse("2025-11-14T14:10:58.646370Z"));
+        assertThat(actual.updatedTimestamp()).isEqualTo(Instant.parse("2025-11-14T14:10:58.646370Z"));
         assertThat(actual.address()).isEqualTo(address);
     }
 }

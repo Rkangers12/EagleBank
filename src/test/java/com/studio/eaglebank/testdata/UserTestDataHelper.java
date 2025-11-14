@@ -6,6 +6,8 @@ import com.studio.eaglebank.domain.models.Address;
 import com.studio.eaglebank.domain.requests.CreateUserRequest;
 import com.studio.eaglebank.domain.responses.UserResponse;
 
+import java.time.Instant;
+
 public class UserTestDataHelper {
 
 
@@ -41,6 +43,8 @@ public class UserTestDataHelper {
                 .address(addressEntity)
                 .phoneNumber("+447912345678")
                 .email("amelia.thompson@example.com")
+                .createdTimestamp(Instant.parse("2025-11-14T14:10:58.646370Z"))
+                .updatedTimestamp(Instant.parse("2025-11-14T14:10:58.646370Z"))
                 .build();
     }
 
@@ -98,7 +102,9 @@ public class UserTestDataHelper {
                 "Amelia Thompson",
                 address,
                 "+447912345678",
-                "amelia.thompson@example.com"
+                "amelia.thompson@example.com",
+                Instant.parse("2025-11-14T14:10:58.646370Z"),
+                Instant.parse("2025-11-14T14:10:58.646370Z")
         );
     }
 }

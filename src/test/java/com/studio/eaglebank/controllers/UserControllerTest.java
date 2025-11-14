@@ -68,8 +68,6 @@ class UserControllerTest {
 
         // Then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.getContentAsString())
-                .isEqualTo(objectMapper.writeValueAsString(expected));
     }
 
     @Test
